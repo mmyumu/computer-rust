@@ -8,6 +8,7 @@ pub trait Transistor {
     }
 }
 
+#[derive(Default)]
 pub struct TransistorState {
     control_gate: bool,
     source: bool,
@@ -20,16 +21,6 @@ impl TransistorState {
 
     pub fn connect_source(&mut self, source: bool) {
         self.source = source;
-    }
-}
-
-// Initialisation par défaut pour TransistorState.
-impl Default for TransistorState {
-    fn default() -> Self {
-        TransistorState {
-            control_gate: false,
-            source: false,
-        }
     }
 }
 
