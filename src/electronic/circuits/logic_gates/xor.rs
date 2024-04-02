@@ -65,6 +65,15 @@ mod tests {
     use super::*;
 
     #[test]
+    #[should_panic]
+    fn xor_evaluate_wrong_inputs() {
+        let mut xor = Xor::new();
+
+        let input = GateInput::Triple(false, false, false);
+        xor.evaluate(input);
+    }
+
+    #[test]
     fn xor_evaluate_with_signal_a_false_signal_b_false() {
         let mut xor = Xor::new();
 

@@ -36,6 +36,15 @@ mod tests {
     use super::*;
 
     #[test]
+    #[should_panic]
+    fn and3_evaluate_wrong_inputs() {
+        let mut and3 = And3::new();
+
+        let input = GateInput::Dual(false, false);
+        and3.evaluate(input);
+    }
+
+    #[test]
     fn and3_evaluate_with_signal_a_false_signal_b_false_signal_c_false() {
         let mut and3 = And3::new();
 

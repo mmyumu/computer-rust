@@ -39,6 +39,15 @@ mod tests {
     use super::*;
 
     #[test]
+    #[should_panic]
+    fn not_evaluate_wrong_inputs() {
+        let mut not = Not::new();
+
+        let input = GateInput::Triple(false, false, false);
+        not.evaluate(input);
+    }
+
+    #[test]
     fn not_evaluate_with_signal_true() {
         let mut not = Not::new();
 

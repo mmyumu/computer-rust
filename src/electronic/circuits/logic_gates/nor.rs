@@ -48,6 +48,15 @@ mod tests {
     use super::*;
 
     #[test]
+    #[should_panic]
+    fn nor_evaluate_wrong_inputs() {
+        let mut nor = Nor::new();
+
+        let input = GateInput::Triple(false, false, false);
+        nor.evaluate(input);
+    }
+
+    #[test]
     fn nor_evaluate_with_signal_a_false_signal_b_false() {
         let mut nor = Nor::new();
 

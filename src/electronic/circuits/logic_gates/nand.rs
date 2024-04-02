@@ -48,6 +48,15 @@ mod tests {
     use super::*;
 
     #[test]
+    #[should_panic]
+    fn nand_evaluate_wrong_inputs() {
+        let mut nand = Nand::new();
+
+        let input = GateInput::Triple(false, false, false);
+        nand.evaluate(input);
+    }
+
+    #[test]
     fn nand_evaluate_with_signal_a_false_signal_b_false() {
         let mut nand = Nand::new();
 

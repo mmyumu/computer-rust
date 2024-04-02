@@ -67,6 +67,15 @@ mod tests {
     use super::*;
 
     #[test]
+    #[should_panic]
+    fn xnor_evaluate_wrong_inputs() {
+        let mut xnor = Xnor::new();
+
+        let input = GateInput::Triple(false, false, false);
+        xnor.evaluate(input);
+    }
+
+    #[test]
     fn xnor_evaluate_with_signal_a_false_signal_b_false() {
         let mut xnor = Xnor::new();
 

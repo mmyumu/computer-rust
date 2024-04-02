@@ -36,6 +36,15 @@ mod tests {
     use super::*;
 
     #[test]
+    #[should_panic]
+    fn or_evaluate_wrong_inputs() {
+        let mut or = Or::new();
+
+        let input = GateInput::Triple(false, false, false);
+        or.evaluate(input);
+    }
+
+    #[test]
     fn or_evaluate_with_signal_a_false_signal_b_false() {
         let mut or = Or::new();
 
