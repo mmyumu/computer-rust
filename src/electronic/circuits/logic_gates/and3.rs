@@ -25,7 +25,7 @@ impl Gate for And3 {
                 let _and1_input = GateInput::Dual(_and0_result, _signal_c);
                 self._and1.evaluate(_and1_input)
             },
-            _ => panic!("And gate expects exactly two input signal."),
+            _ => panic!("And3 gate expects exactly two input signal."),
         }
     }
 }
