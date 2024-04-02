@@ -1,7 +1,6 @@
 use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOSTransistor};
 use crate::electronic::circuits::logic_gates::gate::{GND, VDD};
-
-use super::gate::{Gate, GateInput};
+use crate::electronic::circuits::logic_gates::gate::{Gate, GateInput};
 
 pub struct Not {
     _nmos: NMOSTransistor,
@@ -18,7 +17,7 @@ impl Not {
 }
 
 impl Gate for Not {
-    fn evaluate(&mut self, input: super::gate::GateInput) -> bool {
+    fn evaluate(&mut self, input: GateInput) -> bool {
         match input {
             GateInput::Single(_signal) => {
                 self._nmos.apply_control_signal(_signal);
@@ -29,7 +28,7 @@ impl Gate for Not {
 
                 self._pmos.drain() && !self._nmos.drain()
             },
-            _ => panic!("NotGate expects exactly one input signal."),
+            _ => panic!("Not gate expects exactly one input signal."),
         }
     }
 }
