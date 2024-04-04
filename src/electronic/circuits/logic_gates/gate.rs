@@ -9,5 +9,5 @@ pub enum GateInput {
     Single(bool),
     Dual(bool, bool),
     Triple(bool, bool, bool),
-    Multiple(Vec<bool>),
+    // Multiple(Vec<bool>),
 }
