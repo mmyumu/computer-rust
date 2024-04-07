@@ -26,3 +26,23 @@ impl Mux2To1 {
         self._or.evaluate(_and0_result, _and1_result)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn mux2to1_evaluate() {
+        let mut mux2to1 = Mux2To1::new();
+
+        for a in [false, true] {
+            for b in [false, true] {
+                let result = mux2to1.evaluate(a, b, false);
+                assert!(result == a);
+
+                let result = mux2to1.evaluate(a, b, true);
+                assert!(result == b);
+            }
+        }
+    }
+}
