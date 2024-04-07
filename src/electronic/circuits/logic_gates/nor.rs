@@ -1,6 +1,5 @@
 use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOSTransistor};
-use crate::electronic::circuits::logic_gates::gate::{GND, VDD};
-use crate::electronic::circuits::logic_gates::gate::{Gate, GateInput};
+use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Nor {
     _nmos_a: NMOSTransistor,
@@ -18,77 +17,52 @@ impl Nor {
             _pmos_b: PMOSTransistor::new()
         }
     }
-}
 
-impl Gate for Nor {
-    fn evaluate(&mut self, input: GateInput) -> bool {
-        match input {
-            GateInput::Dual(_signal_a, _signal_b) => {
-                self._nmos_a.apply_control_signal(_signal_a);
-                self._pmos_a.apply_control_signal(_signal_a);
-                self._nmos_b.apply_control_signal(_signal_b);
-                self._pmos_b.apply_control_signal(_signal_b);
-        
-                self._nmos_a.connect_source(GND);
-                self._nmos_b.connect_source(GND);
-        
-                self._pmos_a.connect_source(VDD);
-                self._pmos_b.connect_source(self._pmos_a.drain());
-        
-                self._pmos_b.drain() && !(self._nmos_a.drain() || self._nmos_b.drain())
-            },
-            _ => panic!("Nor gate expects exactly two input signal."),
-        }
+    pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool) -> bool {
+        self._nmos_a.apply_control_signal(_signal_a);
+        self._pmos_a.apply_control_signal(_signal_a);
+        self._nmos_b.apply_control_signal(_signal_b);
+        self._pmos_b.apply_control_signal(_signal_b);
+
+        self._nmos_a.connect_source(GND);
+        self._nmos_b.connect_source(GND);
+
+        self._pmos_a.connect_source(VDD);
+        self._pmos_b.connect_source(self._pmos_a.drain());
+
+        self._pmos_b.drain() && !(self._nmos_a.drain() || self._nmos_b.drain())
     }
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    #[should_panic]
-    fn nor_evaluate_wrong_inputs() {
-        let mut nor = Nor::new();
-
-        let input = GateInput::Triple(false, false, false);
-        nor.evaluate(input);
-    }
-
-    #[test]
     fn nor_evaluate_with_signal_a_false_signal_b_false() {
         let mut nor = Nor::new();
-
-        let input = GateInput::Dual(false, false);
-        let result = nor.evaluate(input);
+        let result = nor.evaluate(false, false);
         assert!(result);
     }
 
     #[test]
     fn nor_evaluate_with_signal_a_false_signal_b_true() {
         let mut nor = Nor::new();
-
-        let input = GateInput::Dual(false, true);
-        let result = nor.evaluate(input);
+        let result = nor.evaluate(false, true);
         assert!(!result);
     }
 
     #[test]
     fn nor_evaluate_with_signal_a_true_signal_b_false() {
         let mut nor = Nor::new();
-
-        let input = GateInput::Dual(true, false);
-        let result = nor.evaluate(input);
+        let result = nor.evaluate(true, false);
         assert!(!result);
     }
 
     #[test]
     fn nor_evaluate_with_signal_a_true_signal_b_true() {
         let mut nor = Nor::new();
-
-        let input = GateInput::Dual(true, true);
-        let result = nor.evaluate(input);
+        let result = nor.evaluate(true, true);
         assert!(!result);
     }
 }

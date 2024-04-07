@@ -1,6 +1,5 @@
 use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOSTransistor};
-use crate::electronic::circuits::logic_gates::gate::{GND, VDD};
-use crate::electronic::circuits::logic_gates::gate::{Gate, GateInput};
+use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Nand {
     _nmos_a: NMOSTransistor,
@@ -18,77 +17,52 @@ impl Nand {
             _pmos_b: PMOSTransistor::new()
         }
     }
-}
 
-impl Gate for Nand {
-    fn evaluate(&mut self, input: GateInput) -> bool {
-        match input {
-            GateInput::Dual(_signal_a, _signal_b) => {
-                self._nmos_a.apply_control_signal(_signal_a);
-                self._pmos_a.apply_control_signal(_signal_a);
-                self._nmos_b.apply_control_signal(_signal_b);
-                self._pmos_b.apply_control_signal(_signal_b);
-        
-                self._pmos_a.connect_source(VDD);
-                self._pmos_b.connect_source(VDD);
-        
-                self._nmos_b.connect_source(GND);
-                self._nmos_a.connect_source(self._nmos_b.drain());
-        
-                (self._pmos_a.drain() || self._pmos_b.drain()) && !self._nmos_a.drain()
-            },
-            _ => panic!("Nand gate expects exactly two input signal."),
-        }
+    pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool) -> bool {
+        self._nmos_a.apply_control_signal(_signal_a);
+        self._pmos_a.apply_control_signal(_signal_a);
+        self._nmos_b.apply_control_signal(_signal_b);
+        self._pmos_b.apply_control_signal(_signal_b);
+
+        self._pmos_a.connect_source(VDD);
+        self._pmos_b.connect_source(VDD);
+
+        self._nmos_b.connect_source(GND);
+        self._nmos_a.connect_source(self._nmos_b.drain());
+
+        (self._pmos_a.drain() || self._pmos_b.drain()) && !self._nmos_a.drain()
     }
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    #[should_panic]
-    fn nand_evaluate_wrong_inputs() {
-        let mut nand = Nand::new();
-
-        let input = GateInput::Triple(false, false, false);
-        nand.evaluate(input);
-    }
-
-    #[test]
     fn nand_evaluate_with_signal_a_false_signal_b_false() {
         let mut nand = Nand::new();
-
-        let input = GateInput::Dual(false, false);
-        let result = nand.evaluate(input);
+        let result = nand.evaluate(false, false);
         assert!(result);
     }
 
     #[test]
     fn nand_evaluate_with_signal_a_false_signal_b_true() {
         let mut nand = Nand::new();
-
-        let input = GateInput::Dual(false, true);
-        let result = nand.evaluate(input);
+        let result = nand.evaluate(false, true);
         assert!(result);
     }
 
     #[test]
     fn nand_evaluate_with_signal_a_true_signal_b_false() {
         let mut nand = Nand::new();
-
-        let input = GateInput::Dual(true, false);
-        let result = nand.evaluate(input);
+        let result = nand.evaluate(true, false);
         assert!(result);
     }
 
     #[test]
     fn nand_evaluate_with_signal_a_true_signal_b_true() {
         let mut nand = Nand::new();
-
-        let input = GateInput::Dual(true, true);
-        let result = nand.evaluate(input);
+        let result = nand.evaluate(true, true);
         assert!(!result);
     }
 }

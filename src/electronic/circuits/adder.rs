@@ -1,7 +1,6 @@
 use crate::electronic::circuits::logic_gates::xor::Xor;
 use crate::electronic::circuits::logic_gates::and::And;
 use crate::electronic::circuits::logic_gates::or::Or;
-use crate::electronic::circuits::logic_gates::gate::{Gate, GateInput};
 
 pub struct AdderResult {
     sum: bool,
@@ -21,12 +20,8 @@ impl HalfAdder {
         }
     }
     pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool) -> AdderResult {
-        let _xor_input = GateInput::Dual(_signal_a, _signal_b);
-        let _sum_result = self._xor.evaluate(_xor_input);
-
-        let _and_input = GateInput::Dual(_signal_a, _signal_b);
-        let _carry = self._and.evaluate(_and_input);
-
+        let _sum_result = self._xor.evaluate(_signal_a, _signal_b);
+        let _carry = self._and.evaluate(_signal_a, _signal_b);
         AdderResult{sum: _sum_result, carry_out: _carry}
     }
 }
@@ -51,21 +46,11 @@ impl FullAdder {
     }
 
     pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool, _carry_in: bool) -> AdderResult {
-        let _xor0_input = GateInput::Dual(_signal_a, _signal_b);
-        let _xor0_result = self._xor0.evaluate(_xor0_input);
-
-        let _xor1_input = GateInput::Dual(_xor0_result, _carry_in);
-        let _sum_result = self._xor1.evaluate(_xor1_input);
-
-        let _and0_input = GateInput::Dual(_carry_in, _xor0_result);
-        let _and0_result = self._and0.evaluate(_and0_input);
-
-        let _and1_input = GateInput::Dual(_signal_a, _signal_b);
-        let _and1_result = self._and1.evaluate(_and1_input);
-
-        let _or_input = GateInput::Dual(_and0_result, _and1_result);
-        let _carry = self._or.evaluate(_or_input);
-
+        let _xor0_result = self._xor0.evaluate(_signal_a, _signal_b);
+        let _sum_result = self._xor1.evaluate(_xor0_result, _carry_in);
+        let _and0_result = self._and0.evaluate(_carry_in, _xor0_result);
+        let _and1_result = self._and1.evaluate(_signal_a, _signal_b);
+        let _carry = self._or.evaluate(_and0_result, _and1_result);
         AdderResult{sum: _sum_result, carry_out: _carry}
     }
 }

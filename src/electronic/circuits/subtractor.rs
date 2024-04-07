@@ -2,7 +2,6 @@ use crate::electronic::circuits::logic_gates::xor::Xor;
 use crate::electronic::circuits::logic_gates::not::Not;
 use crate::electronic::circuits::logic_gates::and::And;
 use crate::electronic::circuits::logic_gates::or::Or;
-use crate::electronic::circuits::logic_gates::gate::{Gate, GateInput};
 
 pub struct SubtractorResult {
     difference: bool,
@@ -25,15 +24,9 @@ impl HalfSubtractor {
     }
 
     pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool) -> SubtractorResult {
-        let _xor_input = GateInput::Dual(_signal_a, _signal_b);
-        let _difference = self._xor.evaluate(_xor_input);
-
-        let _not_input = GateInput::Single(_signal_a);
-        let _not_signal_a = self._not.evaluate(_not_input);
-
-        let _and_input = GateInput::Dual(_not_signal_a, _signal_b);
-        let _borrow_out = self._and.evaluate(_and_input);
-
+        let _difference = self._xor.evaluate(_signal_a, _signal_b);
+        let _not_signal_a = self._not.evaluate(_signal_a);
+        let _borrow_out = self._and.evaluate(_not_signal_a, _signal_b);
         SubtractorResult{difference: _difference, borrow_out: _borrow_out}
     }
 }
@@ -62,27 +55,13 @@ impl FullSubtractor {
     }
 
     pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool, _borrow_in: bool) -> SubtractorResult {
-        let _xor0_input = GateInput::Dual(_signal_a, _signal_b);
-        let _xor0_result = self._xor0.evaluate(_xor0_input);
-
-        let _xor1_input = GateInput::Dual(_xor0_result, _borrow_in);
-        let _difference = self._xor1.evaluate(_xor1_input);
-
-        let _not0_input = GateInput::Single(_signal_a);
-        let _not_signal_a = self._not0.evaluate(_not0_input);
-
-        let _and0_input = GateInput::Dual(_not_signal_a, _signal_b);
-        let _and0_result = self._and0.evaluate(_and0_input);
-
-        let _not1_input = GateInput::Single(_xor0_result);
-        let _not1_result = self._not1.evaluate(_not1_input);
-
-        let _and1_input = GateInput::Dual(_not1_result, _borrow_in);
-        let _and1_result = self._and1.evaluate(_and1_input);
-
-        let _or_input = GateInput::Dual(_and0_result, _and1_result);
-        let _borrow_out = self._or.evaluate(_or_input);
-
+        let _xor0_result = self._xor0.evaluate(_signal_a, _signal_b);
+        let _difference = self._xor1.evaluate(_xor0_result, _borrow_in);
+        let _not_signal_a = self._not0.evaluate(_signal_a);
+        let _and0_result = self._and0.evaluate(_not_signal_a, _signal_b);
+        let _not1_result = self._not1.evaluate(_xor0_result);
+        let _and1_result = self._and1.evaluate(_not1_result, _borrow_in);
+        let _borrow_out = self._or.evaluate(_and0_result, _and1_result);
         SubtractorResult{difference: _difference, borrow_out: _borrow_out}
     }
 }

@@ -1,6 +1,5 @@
 use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOSTransistor};
-use crate::electronic::circuits::logic_gates::gate::{GND, VDD};
-use crate::electronic::circuits::logic_gates::gate::{Gate, GateInput};
+use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Not {
     _nmos: NMOSTransistor,
@@ -14,56 +13,33 @@ impl Not {
             _pmos: PMOSTransistor::new()
         }
     }
-}
 
-impl Gate for Not {
-    fn evaluate(&mut self, input: GateInput) -> bool {
-        match input {
-            GateInput::Single(_signal) => {
-                self._nmos.apply_control_signal(_signal);
-                self._pmos.apply_control_signal(_signal);
+    pub fn evaluate(&mut self, _signal: bool) -> bool {
+        self._nmos.apply_control_signal(_signal);
+        self._pmos.apply_control_signal(_signal);
 
-                self._nmos.connect_source(GND);
-                self._pmos.connect_source(VDD);
+        self._nmos.connect_source(GND);
+        self._pmos.connect_source(VDD);
 
-                self._pmos.drain() && !self._nmos.drain()
-            },
-            _ => panic!("Not gate expects exactly one input signal."),
-        }
+        self._pmos.drain() && !self._nmos.drain()
     }
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    #[should_panic]
-    fn not_evaluate_wrong_inputs() {
-        let mut not = Not::new();
-
-        let input = GateInput::Triple(false, false, false);
-        not.evaluate(input);
-    }
-
-    #[test]
     fn not_evaluate_with_signal_true() {
         let mut not = Not::new();
-
-        let input = GateInput::Single(true);
-
-        let result = not.evaluate(input);
+        let result = not.evaluate(true);
         assert!(!result);
     }
 
     #[test]
     fn not_evaluate_with_signal_false() {
         let mut not = Not::new();
-
-        let input = GateInput::Single(false);
-
-        let result = not.evaluate(input);
+        let result = not.evaluate(false);
         assert!(result);
     }
 }
