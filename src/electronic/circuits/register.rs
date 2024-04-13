@@ -30,11 +30,11 @@ impl PIPORegister {
         self._ds = (0..self._size).map(|_| false).collect::<Vec<bool>>();
     }
 
-    pub fn set_d(&mut self, _ds: &[bool]) {
-        if _ds.len() != self._size as usize {
-            panic!("Input length should be {} but is {}", self._size, _ds.len());
+    pub fn set_d(&mut self, ds: &[bool]) {
+        if ds.len() != self._size as usize {
+            panic!("Input length should be {} but is {}", self._size, ds.len());
         }
-        self._ds = _ds.to_vec();
+        self._ds = ds.to_vec();
         self._ds.reverse();
     }
 
@@ -43,11 +43,6 @@ impl PIPORegister {
             d_flip_flop.set_d(*ds);
             d_flip_flop.clock_tick(enable);
         }
-
-        // for d_flip_flop in self._d_flip_flops.iter_mut() {
-        //     d_flip_flop.clock_tick(enable);
-        // }
-
         self.output()
     }
 }

@@ -19,10 +19,10 @@ impl Mux2To1 {
         }
     }
 
-    pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool, _s: bool) -> bool {
+    pub fn evaluate(&mut self, signal_a: bool, signal_b: bool, _s: bool) -> bool {
         let _not_result = self._not.evaluate(_s);
-        let _and0_result = self._and0.evaluate(_signal_a, _not_result);
-        let _and1_result = self._and1.evaluate(_signal_b, _s);
+        let _and0_result = self._and0.evaluate(signal_a, _not_result);
+        let _and1_result = self._and1.evaluate(signal_b, _s);
         self._or.evaluate(_and0_result, _and1_result)
     }
 }

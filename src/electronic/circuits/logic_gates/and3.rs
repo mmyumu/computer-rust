@@ -13,9 +13,9 @@ impl And3 {
         }
     }
 
-    pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool, _signal_c: bool) -> bool {
-        let _and0_result = self._and0.evaluate(_signal_a, _signal_b);
-        self._and1.evaluate(_and0_result, _signal_c)
+    pub fn evaluate(&mut self, signal_a: bool, signal_b: bool, signal_c: bool) -> bool {
+        let _and0_result = self._and0.evaluate(signal_a, signal_b);
+        self._and1.evaluate(_and0_result, signal_c)
     }
 }
 

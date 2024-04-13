@@ -13,8 +13,8 @@ impl And {
         }
     }
 
-    pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool) -> bool {
-        let _nand_result = self._nand.evaluate(_signal_a, _signal_b);
+    pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> bool {
+        let _nand_result = self._nand.evaluate(signal_a, signal_b);
         self._not.evaluate(_nand_result)
     }
 }

@@ -19,9 +19,9 @@ impl HalfAdder {
             _and: And::new()
         }
     }
-    pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool) -> AdderResult {
-        let _sum_result = self._xor.evaluate(_signal_a, _signal_b);
-        let _carry = self._and.evaluate(_signal_a, _signal_b);
+    pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> AdderResult {
+        let _sum_result = self._xor.evaluate(signal_a, signal_b);
+        let _carry = self._and.evaluate(signal_a, signal_b);
         AdderResult{sum: _sum_result, carry_out: _carry}
     }
 }

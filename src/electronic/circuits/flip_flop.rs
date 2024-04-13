@@ -31,9 +31,9 @@ impl DFlipFlop {
         }
     }
 
-    pub fn set_sr(&mut self, _set: bool, _reset: bool) {
-        self._set = _set;
-        self._reset = _reset;
+    pub fn set_sr(&mut self, set: bool, reset: bool) {
+        self._set = set;
+        self._reset = reset;
     }
 
     pub fn set_d(&mut self, _d: bool) {
@@ -52,13 +52,13 @@ impl DFlipFlop {
         self.q_bar = true;
     }
 
-    pub fn clock_tick(&mut self, _enable: bool) -> (bool, bool) {
+    pub fn clock_tick(&mut self, enable: bool) -> (bool, bool) {
         if self._set && self._reset {
             panic!("Invalid state: set and reset are both high")
         }
 
-        let _nand0_result = self._nand0.evaluate(self._set, _enable);
-        let _nand1_result = self._nand1.evaluate(_enable, self._reset);
+        let _nand0_result = self._nand0.evaluate(self._set, enable);
+        let _nand1_result = self._nand1.evaluate(enable, self._reset);
 
         let mut _next_q = self._nand2.evaluate(_nand0_result, self.q_bar);
         let mut _next_q_bar = self._nand3.evaluate(self.q, _nand1_result);

@@ -18,11 +18,11 @@ impl Nand {
         }
     }
 
-    pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool) -> bool {
-        self._nmos_a.apply_control_signal(_signal_a);
-        self._pmos_a.apply_control_signal(_signal_a);
-        self._nmos_b.apply_control_signal(_signal_b);
-        self._pmos_b.apply_control_signal(_signal_b);
+    pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> bool {
+        self._nmos_a.apply_control_signal(signal_a);
+        self._pmos_a.apply_control_signal(signal_a);
+        self._nmos_b.apply_control_signal(signal_b);
+        self._pmos_b.apply_control_signal(signal_b);
 
         self._pmos_a.connect_source(VDD);
         self._pmos_b.connect_source(VDD);

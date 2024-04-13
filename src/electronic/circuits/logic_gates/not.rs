@@ -14,9 +14,9 @@ impl Not {
         }
     }
 
-    pub fn evaluate(&mut self, _signal: bool) -> bool {
-        self._nmos.apply_control_signal(_signal);
-        self._pmos.apply_control_signal(_signal);
+    pub fn evaluate(&mut self, signal: bool) -> bool {
+        self._nmos.apply_control_signal(signal);
+        self._pmos.apply_control_signal(signal);
 
         self._nmos.connect_source(GND);
         self._pmos.connect_source(VDD);

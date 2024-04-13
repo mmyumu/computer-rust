@@ -19,15 +19,15 @@ impl Decoder2To4 {
         }
     }
 
-    pub fn evaluate(&mut self, _signal_a: &bool, _signal_b: &bool, _enable: bool) -> Vec<bool> {
-        let _not0_result = self._not0.evaluate(*_signal_a);
-        let _not1_result = self._not1.evaluate(*_signal_b);
+    pub fn evaluate(&mut self, signal_a: &bool, signal_b: &bool, enable: bool) -> Vec<bool> {
+        let _not0_result = self._not0.evaluate(*signal_a);
+        let _not1_result = self._not1.evaluate(*signal_b);
 
         let mut outputs = vec![false; 4];
-        outputs[0] = self._ands3[0].evaluate(_not1_result, _not0_result, _enable);
-        outputs[1] = self._ands3[1].evaluate(_not1_result, *_signal_a, _enable);
-        outputs[2] = self._ands3[2].evaluate(*_signal_b, _not0_result, _enable);
-        outputs[3] = self._ands3[3].evaluate(*_signal_b, *_signal_a, _enable);
+        outputs[0] = self._ands3[0].evaluate(_not1_result, _not0_result, enable);
+        outputs[1] = self._ands3[1].evaluate(_not1_result, *signal_a, enable);
+        outputs[2] = self._ands3[2].evaluate(*signal_b, _not0_result, enable);
+        outputs[3] = self._ands3[3].evaluate(*signal_b, *signal_a, enable);
 
         outputs.reverse();
         outputs

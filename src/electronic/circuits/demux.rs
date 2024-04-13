@@ -16,11 +16,11 @@ impl Demux1To2 {
         }
     }
 
-    pub fn evaluate(&mut self, _signal: bool, _s: bool) -> (bool, bool) {
-        let _not_result = self._not.evaluate(_s);
+    pub fn evaluate(&mut self, signal: bool, s: bool) -> (bool, bool) {
+        let _not_result = self._not.evaluate(s);
 
-        let _and0_result = self._and0.evaluate(_not_result, _signal);
-        let _and1_result = self._and1.evaluate(_signal, _s);
+        let _and0_result = self._and0.evaluate(_not_result, signal);
+        let _and1_result = self._and1.evaluate(signal, s);
 
         (_and1_result, _and0_result)
     }
