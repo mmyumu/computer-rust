@@ -12,7 +12,7 @@ pub struct DFlipFlop {
     _set: bool,
     _reset: bool,
 
-    q: bool,
+    pub q: bool,
     q_bar: bool
 }
 

@@ -5,3 +5,4 @@ pub mod mux;
 pub mod demux;
 pub mod decoder;
 pub mod flip_flop;
+pub mod register;

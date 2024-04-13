@@ -7,7 +7,7 @@ pub struct Bits {
 
 impl Bits {
     pub fn len(&self) -> usize {
-        return self._data.len()
+        self._data.len()
     }
 
     pub fn from_vector_b(bools: Vec<bool>, size: Option<u8>) -> Self {
@@ -19,11 +19,10 @@ impl Bits {
         let size = size.unwrap_or(bools.len() as u8);
         let padding = size as usize - bools.len().min(size as usize);
 
-        // Préfixer avec `false`, ensuite les éléments de `bools`, limité par `size`.
         let data = std::iter::repeat(false)
-            .take(padding) // Prendre le nombre de `false` calculé.
-            .chain(bools.iter().cloned().take(size as usize - padding)) // Ajouter les éléments de `bools`.
-            .collect::<Vec<bool>>(); // Collecte les éléments dans un Vec<bool>.
+            .take(padding) 
+            .chain(bools.iter().cloned().take(size as usize - padding)) 
+            .collect::<Vec<bool>>();
         Bits::from_vector_b(data, Some(size))
     }
 
@@ -33,16 +32,14 @@ impl Bits {
     }
 
     pub fn from_int(value: u32, size: Option<u8>) -> Self {
-        let real_size: u8;
-        if size.is_none() {
-            let size_str = format!("{value:b}");
-            real_size = size_str.len() as u8;
+        let real_size = if let Some(size) = size {
+            size
         } else {
-            real_size = size.unwrap();
-        }
+            let size_str = format!("{value:b}");
+            size_str.len() as u8
+        };
 
         if value >= u32::pow(2, real_size.into()) {
-        // if value >= u32::pow(2, real_size as u32) {
             panic!("The given value is bigger than the value that can be represented with {} bits", real_size);
         }
 
@@ -62,7 +59,41 @@ impl Bits {
             .map(|(place, bit)| u32::from(*bit) << place)
             .sum()
     }
+    
 }
+
+impl PartialEq<Bits> for Bits {
+    fn eq(&self, other: &Bits) -> bool {
+        self.to_int() == other.to_int()
+    }
+}
+
+impl<T> PartialEq<T> for Bits
+where
+    T: AsRef<[bool]> + ?Sized,
+{
+    fn eq(&self, other: &T) -> bool {
+        self.to_int() == Bits::from_slice_b(other.as_ref(), None).to_int()
+    }
+}
+
+impl PartialEq<Bits> for &[bool] {
+    fn eq(&self, other: &Bits) -> bool {
+        other._data == *self
+    }
+}
+
+impl PartialEq<Bits> for [bool] {
+    fn eq(&self, other: &Bits) -> bool {
+        other._data == *self
+    }
+}
+
+// impl PartialEq<Bits> for [bool] {
+//     fn eq(&self, other: &Bits) -> bool {
+//         other == self
+//     }
+// }
 
 impl<Idx> std::ops::Index<Idx> for Bits
 where
@@ -118,5 +149,27 @@ mod tests {
     #[should_panic]
     fn bits_from_int_too_big() {
         Bits::from_int(253, Some(4));
+    }
+
+    #[test]
+    fn bits_equal() {
+        let a = Bits::from_int(253, Some(8));
+        let b = Bits::from_int(253, Some(8));
+        assert!(a == b);
+
+        let a = Bits::from_int(253, Some(8));
+        let b = Bits::from_int(253, Some(16));
+        assert!(a == b);
+    }
+
+    #[test]
+    fn bits_not_equal() {
+        let a = Bits::from_int(253, Some(8));
+        let b = Bits::from_int(125, Some(8));
+        assert!(a != b);
+
+        let a = Bits::from_int(253, Some(8));
+        let b = Bits::from_int(125, Some(16));
+        assert!(a != b);
     }
 }
