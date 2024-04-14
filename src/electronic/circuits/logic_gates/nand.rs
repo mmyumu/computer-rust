@@ -2,35 +2,35 @@ use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOS
 use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Nand {
-    _nmos_a: NMOSTransistor,
-    _nmos_b: NMOSTransistor,
-    _pmos_a: PMOSTransistor,
-    _pmos_b: PMOSTransistor
+    nmos_a: NMOSTransistor,
+    nmos_b: NMOSTransistor,
+    pmos_a: PMOSTransistor,
+    pmos_b: PMOSTransistor
 }
 
 impl Nand {
     pub fn new() -> Self {
         Nand{
-            _nmos_a: NMOSTransistor::new(),
-            _nmos_b: NMOSTransistor::new(),
-            _pmos_a: PMOSTransistor::new(),
-            _pmos_b: PMOSTransistor::new()
+            nmos_a: NMOSTransistor::new(),
+            nmos_b: NMOSTransistor::new(),
+            pmos_a: PMOSTransistor::new(),
+            pmos_b: PMOSTransistor::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> bool {
-        self._nmos_a.apply_control_signal(signal_a);
-        self._pmos_a.apply_control_signal(signal_a);
-        self._nmos_b.apply_control_signal(signal_b);
-        self._pmos_b.apply_control_signal(signal_b);
+        self.nmos_a.apply_control_signal(signal_a);
+        self.pmos_a.apply_control_signal(signal_a);
+        self.nmos_b.apply_control_signal(signal_b);
+        self.pmos_b.apply_control_signal(signal_b);
 
-        self._pmos_a.connect_source(VDD);
-        self._pmos_b.connect_source(VDD);
+        self.pmos_a.connect_source(VDD);
+        self.pmos_b.connect_source(VDD);
 
-        self._nmos_b.connect_source(GND);
-        self._nmos_a.connect_source(self._nmos_b.drain());
+        self.nmos_b.connect_source(GND);
+        self.nmos_a.connect_source(self.nmos_b.drain());
 
-        (self._pmos_a.drain() || self._pmos_b.drain()) && !self._nmos_a.drain()
+        (self.pmos_a.drain() || self.pmos_b.drain()) && !self.nmos_a.drain()
     }
 }
 

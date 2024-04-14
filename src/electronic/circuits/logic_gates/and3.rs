@@ -1,21 +1,21 @@
 use crate::electronic::circuits::logic_gates::and::And;
 
 pub struct And3 {
-    _and0: And,
-    _and1: And
+    and0: And,
+    and1: And
 }
 
 impl And3 {
     pub fn new() -> Self {
         And3 {
-            _and0: And::new(),
-            _and1: And::new()
+            and0: And::new(),
+            and1: And::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool, signal_c: bool) -> bool {
-        let _and0_result = self._and0.evaluate(signal_a, signal_b);
-        self._and1.evaluate(_and0_result, signal_c)
+        let _and0_result = self.and0.evaluate(signal_a, signal_b);
+        self.and1.evaluate(_and0_result, signal_c)
     }
 }
 

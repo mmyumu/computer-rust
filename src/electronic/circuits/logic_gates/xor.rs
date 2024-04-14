@@ -2,52 +2,52 @@ use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOS
 use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Xor {
-    _pmos_a: PMOSTransistor,
-    _pmos_a_bar: PMOSTransistor,
-    _pmos_b: PMOSTransistor,
-    _pmos_b_bar: PMOSTransistor,
-    _nmos_a: NMOSTransistor,
-    _nmos_a_bar: NMOSTransistor,
-    _nmos_b: NMOSTransistor,
-    _nmos_b_bar: NMOSTransistor
+    pmos_a: PMOSTransistor,
+    pmos_a_bar: PMOSTransistor,
+    pmos_b: PMOSTransistor,
+    pmos_b_bar: PMOSTransistor,
+    nmos_a: NMOSTransistor,
+    nmos_a_bar: NMOSTransistor,
+    nmos_b: NMOSTransistor,
+    nmos_b_bar: NMOSTransistor
 }
 
 impl Xor {
     pub fn new() -> Self {
         Xor {
-            _pmos_a: PMOSTransistor::new(),
-            _pmos_a_bar: PMOSTransistor::new(),
-            _pmos_b: PMOSTransistor::new(),
-            _pmos_b_bar: PMOSTransistor::new(),
-            _nmos_a: NMOSTransistor::new(),
-            _nmos_a_bar: NMOSTransistor::new(),
-            _nmos_b: NMOSTransistor::new(),
-            _nmos_b_bar: NMOSTransistor::new(),
+            pmos_a: PMOSTransistor::new(),
+            pmos_a_bar: PMOSTransistor::new(),
+            pmos_b: PMOSTransistor::new(),
+            pmos_b_bar: PMOSTransistor::new(),
+            nmos_a: NMOSTransistor::new(),
+            nmos_a_bar: NMOSTransistor::new(),
+            nmos_b: NMOSTransistor::new(),
+            nmos_b_bar: NMOSTransistor::new(),
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> bool {
-        self._pmos_a.apply_control_signal(signal_a);
-        self._pmos_a_bar.apply_control_signal(!signal_a);
-        self._pmos_b_bar.apply_control_signal(!signal_b);
-        self._pmos_b.apply_control_signal(signal_b);
+        self.pmos_a.apply_control_signal(signal_a);
+        self.pmos_a_bar.apply_control_signal(!signal_a);
+        self.pmos_b_bar.apply_control_signal(!signal_b);
+        self.pmos_b.apply_control_signal(signal_b);
 
-        self._nmos_a.apply_control_signal(signal_a);
-        self._nmos_a_bar.apply_control_signal(!signal_a);
-        self._nmos_b.apply_control_signal(signal_b);
-        self._nmos_b_bar.apply_control_signal(!signal_b);
+        self.nmos_a.apply_control_signal(signal_a);
+        self.nmos_a_bar.apply_control_signal(!signal_a);
+        self.nmos_b.apply_control_signal(signal_b);
+        self.nmos_b_bar.apply_control_signal(!signal_b);
 
-        self._pmos_a.connect_source(VDD);
-        self._pmos_a_bar.connect_source(VDD);
-        self._nmos_b.connect_source(GND);
-        self._nmos_b_bar.connect_source(GND);
+        self.pmos_a.connect_source(VDD);
+        self.pmos_a_bar.connect_source(VDD);
+        self.nmos_b.connect_source(GND);
+        self.nmos_b_bar.connect_source(GND);
 
-        self._pmos_b_bar.connect_source(self._pmos_a.drain());
-        self._pmos_b.connect_source(self._pmos_a_bar.drain());
-        self._nmos_a.connect_source(self._nmos_b.drain());
-        self._nmos_a_bar.connect_source(self._nmos_b_bar.drain());
+        self.pmos_b_bar.connect_source(self.pmos_a.drain());
+        self.pmos_b.connect_source(self.pmos_a_bar.drain());
+        self.nmos_a.connect_source(self.nmos_b.drain());
+        self.nmos_a_bar.connect_source(self.nmos_b_bar.drain());
 
-        (self._pmos_b.drain() || self._pmos_b_bar.drain()) && (!self._nmos_a_bar.drain() || !self._nmos_a.drain())
+        (self.pmos_b.drain() || self.pmos_b_bar.drain()) && (!self.nmos_a_bar.drain() || !self.nmos_a.drain())
     }
 }
 

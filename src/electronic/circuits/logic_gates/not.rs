@@ -2,26 +2,26 @@ use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOS
 use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Not {
-    _nmos: NMOSTransistor,
-    _pmos: PMOSTransistor
+    nmos: NMOSTransistor,
+    pmos: PMOSTransistor
 }
 
 impl Not {
     pub fn new() -> Self {
         Not{
-            _nmos: NMOSTransistor::new(),
-            _pmos: PMOSTransistor::new()
+            nmos: NMOSTransistor::new(),
+            pmos: PMOSTransistor::new()
         }
     }
 
     pub fn evaluate(&mut self, signal: bool) -> bool {
-        self._nmos.apply_control_signal(signal);
-        self._pmos.apply_control_signal(signal);
+        self.nmos.apply_control_signal(signal);
+        self.pmos.apply_control_signal(signal);
 
-        self._nmos.connect_source(GND);
-        self._pmos.connect_source(VDD);
+        self.nmos.connect_source(GND);
+        self.pmos.connect_source(VDD);
 
-        self._pmos.drain() && !self._nmos.drain()
+        self.pmos.drain() && !self.nmos.drain()
     }
 }
 

@@ -8,49 +8,49 @@ pub struct AdderResult {
 }
 
 pub struct HalfAdder {
-    _xor: Xor,
-    _and: And
+    xor: Xor,
+    and: And
 }
 
 impl HalfAdder {
     pub fn new() -> Self {
         HalfAdder {
-            _xor: Xor::new(),
-            _and: And::new()
+            xor: Xor::new(),
+            and: And::new()
         }
     }
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> AdderResult {
-        let _sum_result = self._xor.evaluate(signal_a, signal_b);
-        let _carry = self._and.evaluate(signal_a, signal_b);
+        let _sum_result = self.xor.evaluate(signal_a, signal_b);
+        let _carry = self.and.evaluate(signal_a, signal_b);
         AdderResult{sum: _sum_result, carry_out: _carry}
     }
 }
 
 pub struct FullAdder {
-    _xor0: Xor,
-    _xor1: Xor,
-    _and0: And,
-    _and1: And,
-    _or: Or
+    xor0: Xor,
+    xor1: Xor,
+    and0: And,
+    and1: And,
+    or: Or
 }
 
 impl FullAdder {
     pub fn new() -> Self {
         FullAdder {
-            _xor0: Xor::new(),
-            _xor1: Xor::new(),
-            _and0: And::new(),
-            _and1: And::new(),
-            _or: Or::new()
+            xor0: Xor::new(),
+            xor1: Xor::new(),
+            and0: And::new(),
+            and1: And::new(),
+            or: Or::new()
         }
     }
 
     pub fn evaluate(&mut self, _signal_a: bool, _signal_b: bool, _carry_in: bool) -> AdderResult {
-        let _xor0_result = self._xor0.evaluate(_signal_a, _signal_b);
-        let _sum_result = self._xor1.evaluate(_xor0_result, _carry_in);
-        let _and0_result = self._and0.evaluate(_carry_in, _xor0_result);
-        let _and1_result = self._and1.evaluate(_signal_a, _signal_b);
-        let _carry = self._or.evaluate(_and0_result, _and1_result);
+        let _xor0_result = self.xor0.evaluate(_signal_a, _signal_b);
+        let _sum_result = self.xor1.evaluate(_xor0_result, _carry_in);
+        let _and0_result = self.and0.evaluate(_carry_in, _xor0_result);
+        let _and1_result = self.and1.evaluate(_signal_a, _signal_b);
+        let _carry = self.or.evaluate(_and0_result, _and1_result);
         AdderResult{sum: _sum_result, carry_out: _carry}
     }
 }

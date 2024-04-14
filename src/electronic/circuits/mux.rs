@@ -3,27 +3,27 @@ use crate::electronic::circuits::logic_gates::and::And;
 use crate::electronic::circuits::logic_gates::or::Or;
 
 pub struct Mux2To1 {
-    _not: Not,
-    _and0: And,
-    _and1: And,
-    _or: Or
+    not: Not,
+    and0: And,
+    and1: And,
+    or: Or
 }
 
 impl Mux2To1 {
     pub fn new() -> Self {
         Mux2To1 {
-            _not: Not::new(),
-            _and0: And::new(),
-            _and1: And::new(),
-            _or: Or::new()
+            not: Not::new(),
+            and0: And::new(),
+            and1: And::new(),
+            or: Or::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool, _s: bool) -> bool {
-        let _not_result = self._not.evaluate(_s);
-        let _and0_result = self._and0.evaluate(signal_a, _not_result);
-        let _and1_result = self._and1.evaluate(signal_b, _s);
-        self._or.evaluate(_and0_result, _and1_result)
+        let _not_result = self.not.evaluate(_s);
+        let _and0_result = self.and0.evaluate(signal_a, _not_result);
+        let _and1_result = self.and1.evaluate(signal_b, _s);
+        self.or.evaluate(_and0_result, _and1_result)
     }
 }
 

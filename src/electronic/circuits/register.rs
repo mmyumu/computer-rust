@@ -3,9 +3,9 @@ use crate::data::bits::Bits;
 use crate::electronic::circuits::flip_flop::DFlipFlop;
 
 pub struct PIPORegister {
-    _size: u8,
-    _d_flip_flops: Vec<DFlipFlop>,
-    _ds: Vec<bool>
+    size: u8,
+    d_flip_flops: Vec<DFlipFlop>,
+    ds: Vec<bool>
 }
 
 impl PIPORegister {
@@ -13,33 +13,33 @@ impl PIPORegister {
         let _d_flip_flops = (0..size).map(|_| DFlipFlop::new()).collect::<Vec<DFlipFlop>>();
         let _ds = (0..size).map(|_| random()).collect::<Vec<bool>>();
         PIPORegister {
-            _size: size,
-            _d_flip_flops,
-            _ds
+            size,
+            d_flip_flops: _d_flip_flops,
+            ds: _ds
         }
     }
 
     pub fn output(&mut self) -> Bits {
-        Bits::from_vector_b(self._d_flip_flops.iter().rev().map(|d_flip_flop| d_flip_flop.q).collect::<Vec<bool>>(), None)
+        Bits::from_vector_b(self.d_flip_flops.iter().rev().map(|d_flip_flop| d_flip_flop.q).collect::<Vec<bool>>(), None)
     }
 
     pub fn reset_states(&mut self) {
-        for d_flip_flop in self._d_flip_flops.iter_mut() {
+        for d_flip_flop in self.d_flip_flops.iter_mut() {
             d_flip_flop.reset_states();
         }
-        self._ds = (0..self._size).map(|_| false).collect::<Vec<bool>>();
+        self.ds = (0..self.size).map(|_| false).collect::<Vec<bool>>();
     }
 
     pub fn set_d(&mut self, ds: &[bool]) {
-        if ds.len() != self._size as usize {
-            panic!("Input length should be {} but is {}", self._size, ds.len());
+        if ds.len() != self.size as usize {
+            panic!("Input length should be {} but is {}", self.size, ds.len());
         }
-        self._ds = ds.to_vec();
-        self._ds.reverse();
+        self.ds = ds.to_vec();
+        self.ds.reverse();
     }
 
     pub fn clock_tick(&mut self, enable: bool) -> Bits {
-        for (d_flip_flop, ds) in self._d_flip_flops.iter_mut().zip(&self._ds) {
+        for (d_flip_flop, ds) in self.d_flip_flops.iter_mut().zip(&self.ds) {
             d_flip_flop.set_d(*ds);
             d_flip_flop.clock_tick(enable);
         }

@@ -1,21 +1,21 @@
 use crate::electronic::circuits::logic_gates::{nand::Nand, not::Not};
 
 pub struct And {
-    _nand: Nand,
-    _not: Not
+    nand: Nand,
+    not: Not
 }
 
 impl And {
     pub fn new() -> Self {
         And  {
-            _nand: Nand::new(),
-            _not: Not::new()
+            nand: Nand::new(),
+            not: Not::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> bool {
-        let _nand_result = self._nand.evaluate(signal_a, signal_b);
-        self._not.evaluate(_nand_result)
+        let _nand_result = self.nand.evaluate(signal_a, signal_b);
+        self.not.evaluate(_nand_result)
     }
 }
 

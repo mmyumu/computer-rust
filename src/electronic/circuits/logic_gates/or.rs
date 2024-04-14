@@ -2,21 +2,21 @@ use crate::electronic::circuits::logic_gates::nor::Nor;
 use crate::electronic::circuits::logic_gates::not::Not;
 
 pub struct Or {
-    _nor: Nor,
-    _not: Not
+    nor: Nor,
+    not: Not
 }
 
 impl Or {
     pub fn new() -> Self {
         Or {
-            _nor: Nor::new(),
-            _not: Not::new()
+            nor: Nor::new(),
+            not: Not::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> bool {
-        let _nor_result = self._nor.evaluate(signal_a, signal_b);
-        self._not.evaluate(_nor_result)
+        let _nor_result = self.nor.evaluate(signal_a, signal_b);
+        self.not.evaluate(_nor_result)
     }
 }
 

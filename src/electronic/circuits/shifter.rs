@@ -2,9 +2,9 @@ use crate::data::bits::Bits;
 use crate::electronic::circuits::mux::Mux2To1;
 
 pub struct BarrelShifter {
-    _size: u8,
-    _right: bool,
-    _muxes: Vec<Vec<Mux2To1>>
+    size: u8,
+    right: bool,
+    muxes: Vec<Vec<Mux2To1>>
 }
 
 impl BarrelShifter {
@@ -20,24 +20,24 @@ impl BarrelShifter {
         }
 
         BarrelShifter {
-            _size: size,
-            _right: right,
-            _muxes: muxes
+            size,
+            right,
+            muxes
         }
     }
 
     pub fn evaluate(&mut self, i: &Bits, s: &Bits) -> (Bits, bool) {
-        let i_length = 2_u8.pow(self._size as u32);
+        let i_length = 2_u8.pow(self.size as u32);
         if i.len() as u8 != i_length {
             panic!("Length of i should be {} but is {}", i_length, i.len());
         }
 
-        if s.len() as u8 != self._size {
-            panic!("Length of s should be {} but is {}", self._size, s.len());
+        if s.len() as u8 != self.size {
+            panic!("Length of s should be {} but is {}", self.size, s.len());
         }
 
         let mut current_i = i.data();
-        if !self._right {
+        if !self.right {
             current_i.reverse();
         }
 
@@ -52,14 +52,14 @@ impl BarrelShifter {
                 };
 
                 let a0 = bit_i;
-                let mux_result = self._muxes[index_s][index_i].evaluate(*a0, a1, *bit_s);
+                let mux_result = self.muxes[index_s][index_i].evaluate(*a0, a1, *bit_s);
 
                 output.push(mux_result);
             }
             current_i = output.clone();
         }
 
-        if self._right {
+        if self.right {
             let result = Bits::from_slice_b(&current_i, None);
             let first_bit = result[0];
             (result, first_bit)

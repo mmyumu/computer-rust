@@ -2,18 +2,18 @@ use std::slice::Iter;
 
 // TODO: see extern crate bitvector for better optimization
 pub struct Bits {
-    _size: u8,
-    _data: Vec<bool>
+    size: u8,
+    data: Vec<bool>
 }
 
 impl Bits {
     pub fn len(&self) -> usize {
-        self._data.len()
+        self.data.len()
     }
 
     pub fn from_vector_b(bools: Vec<bool>, size: Option<u8>) -> Self {
         let size = size.unwrap_or(bools.len() as u8);
-        Bits { _size: size, _data: bools }
+        Bits { size, data: bools }
     }
 
     pub fn from_slice_b(bools: &[bool], size: Option<u8>) -> Self {
@@ -33,7 +33,7 @@ impl Bits {
     }
 
     pub fn from_bits(bits: &Bits) -> Self {
-        Bits::from_vector_b(bits._data.clone(), Some(bits._size))
+        Bits::from_vector_b(bits.data.clone(), Some(bits.size))
     }
 
     pub fn from_int(value: u32, size: Option<u8>) -> Self {
@@ -51,13 +51,13 @@ impl Bits {
         let data = (0..real_size).rev().map (|n| ((value >> n) & 1) != 0);
 
         Bits {
-            _size: real_size,
-            _data: data.collect()
+            size: real_size,
+            data: data.collect()
         }
     }
 
     pub fn to_int(&self) -> u32 {
-        self._data
+        self.data
             .iter()
             .rev()
             .enumerate()
@@ -69,11 +69,11 @@ impl Bits {
     //     self._data.reverse();
     // }
     pub fn data(&self) -> Vec<bool> {
-        self._data.clone()
+        self.data.clone()
     }
 
     pub fn iter(&self) -> Iter<'_, bool> {
-        self._data.iter()
+        self.data.iter()
     }
 }
 
@@ -94,13 +94,13 @@ where
 
 impl PartialEq<Bits> for &[bool] {
     fn eq(&self, other: &Bits) -> bool {
-        other._data == *self
+        other.data == *self
     }
 }
 
 impl PartialEq<Bits> for [bool] {
     fn eq(&self, other: &Bits) -> bool {
-        other._data == *self
+        other.data == *self
     }
 }
 
@@ -117,7 +117,7 @@ where
     type Output = Idx::Output;
 
     fn index(&self, index: Idx) -> &Self::Output {
-        &self._data[index]
+        &self.data[index]
     }
 }
 

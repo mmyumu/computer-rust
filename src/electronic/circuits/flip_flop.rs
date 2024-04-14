@@ -3,14 +3,14 @@ use crate::electronic::circuits::logic_gates::nand::Nand;
 use crate::electronic::circuits::logic_gates::not::Not;
 
 pub struct DFlipFlop {
-    _nand0: Nand,
-    _nand1: Nand,
-    _nand2: Nand,
-    _nand3: Nand,
-    _not: Not,
+    nand0: Nand,
+    nand1: Nand,
+    nand2: Nand,
+    nand3: Nand,
+    not: Not,
 
-    _set: bool,
-    _reset: bool,
+    set: bool,
+    reset: bool,
 
     pub q: bool,
     q_bar: bool
@@ -19,25 +19,25 @@ pub struct DFlipFlop {
 impl DFlipFlop {
     pub fn new() -> Self {
         DFlipFlop {
-            _nand0: Nand::new(),
-            _nand1: Nand::new(),
-            _nand2: Nand::new(),
-            _nand3: Nand::new(),
-            _not: Not::new(),
-            _set: random(),
-            _reset: random(),
+            nand0: Nand::new(),
+            nand1: Nand::new(),
+            nand2: Nand::new(),
+            nand3: Nand::new(),
+            not: Not::new(),
+            set: random(),
+            reset: random(),
             q: random(),
             q_bar: random(),
         }
     }
 
     pub fn set_sr(&mut self, set: bool, reset: bool) {
-        self._set = set;
-        self._reset = reset;
+        self.set = set;
+        self.reset = reset;
     }
 
     pub fn set_d(&mut self, _d: bool) {
-        let _not_d = self._not.evaluate(_d);
+        let _not_d = self.not.evaluate(_d);
         self.set_sr(_d, _not_d);
     }
 
@@ -46,26 +46,26 @@ impl DFlipFlop {
     }
 
     pub fn reset_states(&mut self) {
-        self._set = false;
-        self._set = true;
+        self.set = false;
+        self.set = true;
         self.q = false;
         self.q_bar = true;
     }
 
     pub fn clock_tick(&mut self, enable: bool) -> (bool, bool) {
-        if self._set && self._reset {
+        if self.set && self.reset {
             panic!("Invalid state: set and reset are both high")
         }
 
-        let _nand0_result = self._nand0.evaluate(self._set, enable);
-        let _nand1_result = self._nand1.evaluate(enable, self._reset);
+        let _nand0_result = self.nand0.evaluate(self.set, enable);
+        let _nand1_result = self.nand1.evaluate(enable, self.reset);
 
-        let mut _next_q = self._nand2.evaluate(_nand0_result, self.q_bar);
-        let mut _next_q_bar = self._nand3.evaluate(self.q, _nand1_result);
+        let mut _next_q = self.nand2.evaluate(_nand0_result, self.q_bar);
+        let mut _next_q_bar = self.nand3.evaluate(self.q, _nand1_result);
 
         // 2nd signal propagation
-        _next_q = self._nand2.evaluate(_nand0_result, _next_q_bar);
-        _next_q_bar = self._nand3.evaluate(_next_q, _nand1_result);
+        _next_q = self.nand2.evaluate(_nand0_result, _next_q_bar);
+        _next_q_bar = self.nand3.evaluate(_next_q, _nand1_result);
 
         self.q = _next_q;
         self.q_bar = _next_q_bar;

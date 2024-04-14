@@ -11,79 +11,79 @@ pub struct SubtractorResult {
 }
 
 pub struct HalfSubtractor {
-    _xor: Xor,
-    _not: Not,
-    _and: And
+    xor: Xor,
+    not: Not,
+    and: And
 }
 
 impl HalfSubtractor {
     pub fn new() -> Self {
         HalfSubtractor {
-            _xor: Xor::new(),
-            _not: Not::new(),
-            _and: And::new()
+            xor: Xor::new(),
+            not: Not::new(),
+            and: And::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> SubtractorResult {
-        let _difference = self._xor.evaluate(signal_a, signal_b);
-        let _not_signal_a = self._not.evaluate(signal_a);
-        let _borrow_out = self._and.evaluate(_not_signal_a, signal_b);
+        let _difference = self.xor.evaluate(signal_a, signal_b);
+        let _not_signal_a = self.not.evaluate(signal_a);
+        let _borrow_out = self.and.evaluate(_not_signal_a, signal_b);
         SubtractorResult{difference: _difference, borrow_out: _borrow_out}
     }
 }
 
 pub struct FullSubtractor {
-    _xor0: Xor,
-    _xor1: Xor,
-    _not0: Not,
-    _not1: Not,
-    _and0: And,
-    _and1: And,
-    _or: Or
+    xor0: Xor,
+    xor1: Xor,
+    not0: Not,
+    not1: Not,
+    and0: And,
+    and1: And,
+    or: Or
 }
 
 impl FullSubtractor {
     pub fn new() -> Self {
         FullSubtractor {
-            _xor0: Xor::new(),
-            _xor1: Xor::new(),
-            _not0: Not::new(),
-            _not1: Not::new(),
-            _and0: And::new(),
-            _and1: And::new(),
-            _or: Or::new()
+            xor0: Xor::new(),
+            xor1: Xor::new(),
+            not0: Not::new(),
+            not1: Not::new(),
+            and0: And::new(),
+            and1: And::new(),
+            or: Or::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool, borrow_in: bool) -> SubtractorResult {
-        let _xor0_result = self._xor0.evaluate(signal_a, signal_b);
-        let _difference = self._xor1.evaluate(_xor0_result, borrow_in);
-        let _not_signal_a = self._not0.evaluate(signal_a);
-        let _and0_result = self._and0.evaluate(_not_signal_a, signal_b);
-        let _not1_result = self._not1.evaluate(_xor0_result);
-        let _and1_result = self._and1.evaluate(_not1_result, borrow_in);
-        let _borrow_out = self._or.evaluate(_and0_result, _and1_result);
+        let _xor0_result = self.xor0.evaluate(signal_a, signal_b);
+        let _difference = self.xor1.evaluate(_xor0_result, borrow_in);
+        let _not_signal_a = self.not0.evaluate(signal_a);
+        let _and0_result = self.and0.evaluate(_not_signal_a, signal_b);
+        let _not1_result = self.not1.evaluate(_xor0_result);
+        let _and1_result = self.and1.evaluate(_not1_result, borrow_in);
+        let _borrow_out = self.or.evaluate(_and0_result, _and1_result);
         SubtractorResult{difference: _difference, borrow_out: _borrow_out}
     }
 }
 
 pub struct FullSubtractorRestore {
-    _full_subtractor: FullSubtractor,
-    _mux: Mux2To1
+    full_subtractor: FullSubtractor,
+    mux: Mux2To1
 }
 
 impl FullSubtractorRestore {
     pub fn new() -> Self {
         FullSubtractorRestore {
-            _full_subtractor: FullSubtractor::new(),
-            _mux: Mux2To1::new()
+            full_subtractor: FullSubtractor::new(),
+            mux: Mux2To1::new()
         }
     }
 
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool, borrow_in: bool, carry: bool) -> (bool, bool) {
-        let subtractor_result = self._full_subtractor.evaluate(signal_a, signal_b, borrow_in);
-        let mux_result = self._mux.evaluate(signal_a, subtractor_result.difference, carry);
+        let subtractor_result = self.full_subtractor.evaluate(signal_a, signal_b, borrow_in);
+        let mux_result = self.mux.evaluate(signal_a, subtractor_result.difference, carry);
 
         (mux_result, subtractor_result.borrow_out)
     }
