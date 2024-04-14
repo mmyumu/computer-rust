@@ -1,3 +1,4 @@
+use std::slice::Iter;
 
 // TODO: see extern crate bitvector for better optimization
 pub struct Bits {
@@ -31,6 +32,10 @@ impl Bits {
         Bits::from_slice_b(&bools, size)
     }
 
+    pub fn from_bits(bits: &Bits) -> Self {
+        Bits::from_vector_b(bits._data.clone(), Some(bits._size))
+    }
+
     pub fn from_int(value: u32, size: Option<u8>) -> Self {
         let real_size = if let Some(size) = size {
             size
@@ -60,6 +65,16 @@ impl Bits {
             .sum()
     }
     
+    // pub fn reverse(&mut self) {
+    //     self._data.reverse();
+    // }
+    pub fn data(&self) -> Vec<bool> {
+        self._data.clone()
+    }
+
+    pub fn iter(&self) -> Iter<'_, bool> {
+        self._data.iter()
+    }
 }
 
 impl PartialEq<Bits> for Bits {
