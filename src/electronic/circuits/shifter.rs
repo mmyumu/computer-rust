@@ -36,7 +36,6 @@ impl BarrelShifter {
             panic!("Length of s should be {} but is {}", self._size, s.len());
         }
 
-        // let mut current_i = Bits::from_bits(i);
         let mut current_i = i.data();
         if !self._right {
             current_i.reverse();
@@ -66,7 +65,6 @@ impl BarrelShifter {
             (result, first_bit)
         } else {
             current_i.reverse();
-            // output.reverse();
             let result = Bits::from_slice_b(&current_i, None);
             let first_bit = result[result.len() - 1];
             (result, first_bit)

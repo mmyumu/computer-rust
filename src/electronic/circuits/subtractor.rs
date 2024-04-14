@@ -2,6 +2,8 @@ use crate::electronic::circuits::logic_gates::xor::Xor;
 use crate::electronic::circuits::logic_gates::not::Not;
 use crate::electronic::circuits::logic_gates::and::And;
 use crate::electronic::circuits::logic_gates::or::Or;
+use crate::electronic::circuits::mux::Mux2To1;
+
 
 pub struct SubtractorResult {
     difference: bool,
@@ -63,6 +65,27 @@ impl FullSubtractor {
         let _and1_result = self._and1.evaluate(_not1_result, borrow_in);
         let _borrow_out = self._or.evaluate(_and0_result, _and1_result);
         SubtractorResult{difference: _difference, borrow_out: _borrow_out}
+    }
+}
+
+pub struct FullSubtractorRestore {
+    _full_subtractor: FullSubtractor,
+    _mux: Mux2To1
+}
+
+impl FullSubtractorRestore {
+    pub fn new() -> Self {
+        FullSubtractorRestore {
+            _full_subtractor: FullSubtractor::new(),
+            _mux: Mux2To1::new()
+        }
+    }
+
+    pub fn evaluate(&mut self, signal_a: bool, signal_b: bool, borrow_in: bool, carry: bool) -> (bool, bool) {
+        let subtractor_result = self._full_subtractor.evaluate(signal_a, signal_b, borrow_in);
+        let mux_result = self._mux.evaluate(signal_a, subtractor_result.difference, carry);
+
+        (mux_result, subtractor_result.borrow_out)
     }
 }
 
@@ -164,5 +187,29 @@ mod tests {
         let result = full_subtractor.evaluate(true, true, true);
         assert!(result.difference);
         assert!(result.borrow_out);
+    }
+
+    #[test]
+    fn full_subtractor_restore() {
+        for a in [false, true] {
+            for b in [false, true] {
+                for borrow_in in [false, true] {
+                    for carry in [false, true] {
+                        let mut full_subtractor_restore = FullSubtractorRestore::new();
+                        let (result, borrow_out) = full_subtractor_restore.evaluate(a, b, borrow_in, carry);
+                        if carry {
+                            if (a as u8) < (b as u8 + borrow_in as u8) {
+                                assert!(borrow_out);
+                                // assert borrow_out is True, f"Inputs: a={a}, b={b}, borrow_in={borrow_in}, carry={carry}"
+                            }
+                            let expected_result = (a as u8 + b as u8 + borrow_in as u8) % 2 != 0;
+                            assert!(result == expected_result);
+                        } else {
+                            assert!(result == a);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
