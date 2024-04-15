@@ -3,8 +3,8 @@ use crate::electronic::circuits::logic_gates::and::And;
 use crate::electronic::circuits::logic_gates::or::Or;
 
 pub struct AdderResult {
-    sum: bool,
-    carry_out: bool
+    pub sum: bool,
+    pub carry_out: bool
 }
 
 pub struct HalfAdder {

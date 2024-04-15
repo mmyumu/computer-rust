@@ -7,3 +7,4 @@ pub mod decoder;
 pub mod flip_flop;
 pub mod register;
 pub mod shifter;
+pub mod bitwise;
