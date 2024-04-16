@@ -1,5 +1,6 @@
 pub mod add;
 pub mod sub;
+pub mod mult;
 
 use crate::data::bits::Bits;
 

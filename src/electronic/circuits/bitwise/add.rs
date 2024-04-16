@@ -11,6 +11,12 @@ pub struct BitwiseAdd {
     adders: Vec<FullAdder>
 }
 
+impl BitwiseCheck for BitwiseAdd {
+    fn size(&self) -> u8 {
+        self.bitwise.size
+    }
+}
+
 impl BitwiseAdd {
     pub fn new(size: u8) -> Self {
         let adders = (0..size).map(|_| FullAdder::new()).collect::<Vec<FullAdder>>();
@@ -36,12 +42,6 @@ impl BitwiseAdd {
         output.reverse();
 
         (Bits::from_vector_b(output, None), carry_out)
-    }
-}
-
-impl BitwiseCheck for BitwiseAdd {
-    fn size(&self) -> u8 {
-        self.bitwise.size
     }
 }
 

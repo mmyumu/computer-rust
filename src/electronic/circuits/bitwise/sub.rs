@@ -13,6 +13,12 @@ pub struct BitwiseSub {
     subtractors: Vec<FullSubtractor>
 }
 
+impl BitwiseCheck for BitwiseSub {
+    fn size(&self) -> u8 {
+        self.bitwise.size
+    }
+}
+
 impl BitwiseSub {
     pub fn new(size: u8) -> Self {
         let subtractors = (0..size).map(|_| FullSubtractor::new()).collect::<Vec<FullSubtractor>>();
@@ -38,12 +44,6 @@ impl BitwiseSub {
         output.reverse();
 
         (Bits::from_vector_b(output, None), borrow_out)
-    }
-}
-
-impl BitwiseCheck for BitwiseSub {
-    fn size(&self) -> u8 {
-        self.bitwise.size
     }
 }
 
