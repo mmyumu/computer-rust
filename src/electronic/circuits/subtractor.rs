@@ -6,8 +6,8 @@ use crate::electronic::circuits::mux::Mux2To1;
 
 
 pub struct SubtractorResult {
-    difference: bool,
-    borrow_out: bool
+    pub difference: bool,
+    pub borrow_out: bool
 }
 
 pub struct HalfSubtractor {
