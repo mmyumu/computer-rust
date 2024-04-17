@@ -2,8 +2,8 @@ use std::iter::zip;
 
 use crate::data::bits::Bits;
 use crate::electronic::circuits::bitwise::Bitwise;
-use crate::electronic::circuits::logic_gates::or::Or;
 use crate::electronic::circuits::logic_gates::not::Not;
+use crate::electronic::circuits::logic_gates::or::Or;
 use crate::electronic::circuits::subtractor::FullSubtractorRestore;
 
 use super::BitwiseCheck;
@@ -12,7 +12,7 @@ pub struct BitwiseDiv {
     bitwise: Bitwise,
     ors: Vec<Or>,
     nots: Vec<Not>,
-    subrestores: Vec<Vec<FullSubtractorRestore>>
+    subrestores: Vec<Vec<FullSubtractorRestore>>,
 }
 
 impl BitwiseCheck for BitwiseDiv {
@@ -31,7 +31,7 @@ impl BitwiseDiv {
             nots.push(Not::new());
             let mut subrestores_row = Vec::<FullSubtractorRestore>::new();
             for _ in 0..size {
-                subrestores_row.push(FullSubtractorRestore::new())                
+                subrestores_row.push(FullSubtractorRestore::new())
             }
             subrestores.push(subrestores_row);
         }
@@ -40,11 +40,11 @@ impl BitwiseDiv {
             bitwise: Bitwise::new(size),
             ors,
             nots,
-            subrestores
+            subrestores,
         }
     }
 
-    pub fn evaluate(&mut self, a: &Bits, d: &Bits) -> (Bits, Bits)  {
+    pub fn evaluate(&mut self, a: &Bits, d: &Bits) -> (Bits, Bits) {
         self.check_input(a);
         self.check_input(d);
 
@@ -59,7 +59,10 @@ impl BitwiseDiv {
         let mut last_remainder_row = Vec::<bool>::new();
         for i in 0..self.size() as usize {
             let (bit_or, row_a) = if i == 0 {
-                (filled_a[0], filled_a[i + 1..i+ 1 + self.size() as usize].to_vec())
+                (
+                    filled_a[0],
+                    filled_a[i + 1..i + 1 + self.size() as usize].to_vec(),
+                )
             } else {
                 let r = &last_remainder_row[1..last_remainder_row.len()];
                 let row_a: Vec<bool> = [r, &[a[i]]].concat();
@@ -70,19 +73,29 @@ impl BitwiseDiv {
             last_remainder_row = remainder_row;
             quotient.push(quotient_row);
         }
-        (Bits::from_vector_b(quotient, None), Bits::from_vector_b(last_remainder_row, None))
+        (
+            Bits::from_vector_b(quotient, None),
+            Bits::from_vector_b(last_remainder_row, None),
+        )
     }
 
     fn _row(&mut self, row: usize, a: Vec<bool>, d: &Bits, bit_or: bool) -> (bool, Vec<bool>) {
         if a.len() != self.size() as usize {
-            panic!("Length of input a should be {} but is {}", self.size(), a.len())
+            panic!(
+                "Length of input a should be {} but is {}",
+                self.size(),
+                a.len()
+            )
         }
 
         let mut borrow_in = false;
         let mut carry_in = true;
         let mut last_borrow_out = false;
 
-        for (subrestore, (bit_a, bit_d)) in zip(self.subrestores[row].iter_mut(), zip(a.iter().rev(), d.iter().rev())) {
+        for (subrestore, (bit_a, bit_d)) in zip(
+            self.subrestores[row].iter_mut(),
+            zip(a.iter().rev(), d.iter().rev()),
+        ) {
             let (_, borrow_out) = subrestore.evaluate(*bit_a, *bit_d, borrow_in, carry_in);
             borrow_in = borrow_out;
             last_borrow_out = borrow_out;
@@ -94,8 +107,12 @@ impl BitwiseDiv {
         let mut remainder = Vec::<bool>::new();
         carry_in = quotient;
 
-        for (subrestore, (bit_a, bit_d)) in zip(self.subrestores[row].iter_mut(), zip(a.iter().rev(), d.iter().rev())) {
-            let (subrestore_result, borrow_out) = subrestore.evaluate(*bit_a, *bit_d, borrow_in, carry_in);
+        for (subrestore, (bit_a, bit_d)) in zip(
+            self.subrestores[row].iter_mut(),
+            zip(a.iter().rev(), d.iter().rev()),
+        ) {
+            let (subrestore_result, borrow_out) =
+                subrestore.evaluate(*bit_a, *bit_d, borrow_in, carry_in);
             remainder.push(subrestore_result);
             borrow_in = borrow_out;
         }
@@ -118,7 +135,7 @@ mod tests {
 
                 if d2 != 0 {
                     let mut bitwise_div = BitwiseDiv::new(4);
-                    let (quotient, remainder) = bitwise_div.evaluate(&data,& divider);
+                    let (quotient, remainder) = bitwise_div.evaluate(&data, &divider);
 
                     assert_eq!(quotient.to_int(), d1 / d2);
                     assert_eq!(remainder.to_int(), d1 % d2);

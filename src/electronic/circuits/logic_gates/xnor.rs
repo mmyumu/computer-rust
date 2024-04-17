@@ -1,4 +1,4 @@
-use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOSTransistor};
+use crate::electronic::components::transistor::{NMOSTransistor, PMOSTransistor, Transistor};
 use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Xnor {
@@ -9,7 +9,7 @@ pub struct Xnor {
     nmos_a: NMOSTransistor,
     nmos_a_bar: NMOSTransistor,
     nmos_b: NMOSTransistor,
-    nmos_b_bar: NMOSTransistor
+    nmos_b_bar: NMOSTransistor,
 }
 
 impl Xnor {
@@ -22,7 +22,7 @@ impl Xnor {
             nmos_a: NMOSTransistor::new(),
             nmos_a_bar: NMOSTransistor::new(),
             nmos_b: NMOSTransistor::new(),
-            nmos_b_bar: NMOSTransistor::new()
+            nmos_b_bar: NMOSTransistor::new(),
         }
     }
 
@@ -47,7 +47,8 @@ impl Xnor {
         self.nmos_a.connect_source(self.nmos_b_bar.drain());
         self.nmos_a_bar.connect_source(self.nmos_b.drain());
 
-        (self.pmos_b.drain() || self.pmos_b_bar.drain()) && (!self.nmos_a_bar.drain() || !self.nmos_a.drain())
+        (self.pmos_b.drain() || self.pmos_b_bar.drain())
+            && (!self.nmos_a_bar.drain() || !self.nmos_a.drain())
     }
 }
 

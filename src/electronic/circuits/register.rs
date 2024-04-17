@@ -1,26 +1,35 @@
-use rand::random;
 use crate::data::bits::Bits;
 use crate::electronic::circuits::flip_flop::DFlipFlop;
+use rand::random;
 
 pub struct PIPORegister {
     size: u8,
     d_flip_flops: Vec<DFlipFlop>,
-    ds: Vec<bool>
+    ds: Vec<bool>,
 }
 
 impl PIPORegister {
     pub fn new(size: u8) -> Self {
-        let _d_flip_flops = (0..size).map(|_| DFlipFlop::new()).collect::<Vec<DFlipFlop>>();
+        let _d_flip_flops = (0..size)
+            .map(|_| DFlipFlop::new())
+            .collect::<Vec<DFlipFlop>>();
         let _ds = (0..size).map(|_| random()).collect::<Vec<bool>>();
         PIPORegister {
             size,
             d_flip_flops: _d_flip_flops,
-            ds: _ds
+            ds: _ds,
         }
     }
 
     pub fn output(&mut self) -> Bits {
-        Bits::from_vector_b(self.d_flip_flops.iter().rev().map(|d_flip_flop| d_flip_flop.q).collect::<Vec<bool>>(), None)
+        Bits::from_vector_b(
+            self.d_flip_flops
+                .iter()
+                .rev()
+                .map(|d_flip_flop| d_flip_flop.q)
+                .collect::<Vec<bool>>(),
+            None,
+        )
     }
 
     pub fn reset_states(&mut self) {
@@ -46,7 +55,6 @@ impl PIPORegister {
         self.output()
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -84,7 +92,9 @@ mod tests {
         assert!(pipo_register.clock_tick(true) == &[true, true, true, false]);
 
         for _ in 0..10 {
-            assert!(Bits::from_slice_b(&[true, true, true, false], None) == &[true, true, true, false]);
+            assert!(
+                Bits::from_slice_b(&[true, true, true, false], None) == &[true, true, true, false]
+            );
         }
     }
 

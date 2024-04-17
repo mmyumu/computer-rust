@@ -2,14 +2,14 @@ use crate::electronic::circuits::logic_gates::{nand::Nand, not::Not};
 
 pub struct And {
     nand: Nand,
-    not: Not
+    not: Not,
 }
 
 impl And {
     pub fn new() -> Self {
-        And  {
+        And {
             nand: Nand::new(),
-            not: Not::new()
+            not: Not::new(),
         }
     }
 

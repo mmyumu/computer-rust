@@ -2,14 +2,14 @@ use crate::electronic::circuits::logic_gates::and::And;
 
 pub struct And3 {
     and0: And,
-    and1: And
+    and1: And,
 }
 
 impl And3 {
     pub fn new() -> Self {
         And3 {
             and0: And::new(),
-            and1: And::new()
+            and1: And::new(),
         }
     }
 

@@ -1,16 +1,16 @@
-use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOSTransistor};
+use crate::electronic::components::transistor::{NMOSTransistor, PMOSTransistor, Transistor};
 use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Not {
     nmos: NMOSTransistor,
-    pmos: PMOSTransistor
+    pmos: PMOSTransistor,
 }
 
 impl Not {
     pub fn new() -> Self {
-        Not{
+        Not {
             nmos: NMOSTransistor::new(),
-            pmos: PMOSTransistor::new()
+            pmos: PMOSTransistor::new(),
         }
     }
 

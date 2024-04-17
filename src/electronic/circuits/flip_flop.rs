@@ -1,6 +1,6 @@
-use rand::random;
 use crate::electronic::circuits::logic_gates::nand::Nand;
 use crate::electronic::circuits::logic_gates::not::Not;
+use rand::random;
 
 pub struct DFlipFlop {
     nand0: Nand,
@@ -13,7 +13,7 @@ pub struct DFlipFlop {
     reset: bool,
 
     pub q: bool,
-    q_bar: bool
+    q_bar: bool,
 }
 
 impl DFlipFlop {
@@ -187,7 +187,7 @@ mod tests {
     #[test]
     fn d_flip_flop_unstable_initial_state_true() {
         let mut dflipflop = DFlipFlop::new();
-    
+
         // This state should be avoided, we need to reset state before using dflipflop
         dflipflop.q = true;
         dflipflop.q_bar = true;
@@ -200,7 +200,7 @@ mod tests {
     #[test]
     fn d_flip_flop_unstable_initial_state_false() {
         let mut dflipflop = DFlipFlop::new();
-    
+
         // This state should be avoided, we need to reset state before using dflipflop
         dflipflop.q = false;
         dflipflop.q_bar = false;

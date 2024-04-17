@@ -1,19 +1,17 @@
 pub mod add;
-pub mod sub;
-pub mod mult;
 pub mod div;
+pub mod mult;
+pub mod sub;
 
 use crate::data::bits::Bits;
 
 pub struct Bitwise {
-    size: u8
+    size: u8,
 }
 
 impl Bitwise {
     pub fn new(size: u8) -> Self {
-        Bitwise {
-            size
-        }
+        Bitwise { size }
     }
     // pub fn check_input(&mut self, i: &Bits) {
     //     if i.len() != self.size as usize {
@@ -27,7 +25,12 @@ pub trait BitwiseCheck {
 
     fn check_input(&mut self, i: &Bits) {
         if i.len() != self.size() as usize {
-            panic!("Length of {} should be {} but is {}", stringify!(i), self.size(), i.len());
+            panic!(
+                "Length of {} should be {} but is {}",
+                stringify!(i),
+                self.size(),
+                i.len()
+            );
         }
     }
 }

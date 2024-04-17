@@ -1,28 +1,31 @@
-use crate::electronic::circuits::logic_gates::xor::Xor;
 use crate::electronic::circuits::logic_gates::and::And;
 use crate::electronic::circuits::logic_gates::or::Or;
+use crate::electronic::circuits::logic_gates::xor::Xor;
 
 pub struct AdderResult {
     pub sum: bool,
-    pub carry_out: bool
+    pub carry_out: bool,
 }
 
 pub struct HalfAdder {
     xor: Xor,
-    and: And
+    and: And,
 }
 
 impl HalfAdder {
     pub fn new() -> Self {
         HalfAdder {
             xor: Xor::new(),
-            and: And::new()
+            and: And::new(),
         }
     }
     pub fn evaluate(&mut self, signal_a: bool, signal_b: bool) -> AdderResult {
         let _sum_result = self.xor.evaluate(signal_a, signal_b);
         let _carry = self.and.evaluate(signal_a, signal_b);
-        AdderResult{sum: _sum_result, carry_out: _carry}
+        AdderResult {
+            sum: _sum_result,
+            carry_out: _carry,
+        }
     }
 }
 
@@ -31,7 +34,7 @@ pub struct FullAdder {
     xor1: Xor,
     and0: And,
     and1: And,
-    or: Or
+    or: Or,
 }
 
 impl FullAdder {
@@ -41,7 +44,7 @@ impl FullAdder {
             xor1: Xor::new(),
             and0: And::new(),
             and1: And::new(),
-            or: Or::new()
+            or: Or::new(),
         }
     }
 
@@ -51,7 +54,10 @@ impl FullAdder {
         let _and0_result = self.and0.evaluate(_carry_in, _xor0_result);
         let _and1_result = self.and1.evaluate(_signal_a, _signal_b);
         let _carry = self.or.evaluate(_and0_result, _and1_result);
-        AdderResult{sum: _sum_result, carry_out: _carry}
+        AdderResult {
+            sum: _sum_result,
+            carry_out: _carry,
+        }
     }
 }
 
@@ -90,7 +96,7 @@ mod tests {
         assert!(!result.sum);
         assert!(result.carry_out);
     }
-    
+
     #[test]
     fn full_adder_evaluate_with_signal_a_false_signal_b_false_carry_in_false() {
         let mut full_adder = FullAdder::new();

@@ -1,21 +1,21 @@
 use crate::data::bits::Bits;
-use crate::electronic::circuits::logic_gates::not::Not;
 use crate::electronic::circuits::logic_gates::and::And;
 use crate::electronic::circuits::logic_gates::and3::And3;
+use crate::electronic::circuits::logic_gates::not::Not;
 
 pub struct Decoder2To4 {
     not0: Not,
     not1: Not,
-    ands3: Vec<And3>
+    ands3: Vec<And3>,
 }
 
 impl Decoder2To4 {
     pub fn new() -> Self {
-        let ands3 = (0.. 4).map(|_n|And3::new()).collect::<Vec<And3>>();
+        let ands3 = (0..4).map(|_n| And3::new()).collect::<Vec<And3>>();
         Decoder2To4 {
             not0: Not::new(),
             not1: Not::new(),
-            ands3
+            ands3,
         }
     }
 
@@ -40,7 +40,7 @@ pub struct Decoder {
     ands: Option<Vec<And>>,
     lower_half_decoder: Option<Box<Decoder>>,
     upper_half_decoder: Option<Box<Decoder>>,
-    decoder2to4: Option<Decoder2To4>
+    decoder2to4: Option<Decoder2To4>,
 }
 
 impl Decoder {
@@ -52,11 +52,11 @@ impl Decoder {
                 ands: None,
                 lower_half_decoder: None,
                 upper_half_decoder: None,
-                decoder2to4: Some(Decoder2To4::new())
+                decoder2to4: Some(Decoder2To4::new()),
             }
         } else {
             let bits_size = 2_u8.pow(depth as u32);
-            let ands = (0.. bits_size).map(|_n|And::new()).collect::<Vec<And>>();
+            let ands = (0..bits_size).map(|_n| And::new()).collect::<Vec<And>>();
 
             let lower_half_decoder = Box::new(Decoder::new(depth - 1));
             let upper_half_decoder = Box::new(Decoder::new(depth - 1));
@@ -67,15 +67,18 @@ impl Decoder {
                 ands: Some(ands),
                 lower_half_decoder: Some(lower_half_decoder),
                 upper_half_decoder: Some(upper_half_decoder),
-                decoder2to4: None
+                decoder2to4: None,
             }
         }
-        
     }
 
     pub fn evaluate(&mut self, _inputs: Bits, _enable: bool) -> Vec<bool> {
         if _inputs.len() != self.depth as usize {
-            panic!("Expected {} input signals, got {}", self.depth, _inputs.len())
+            panic!(
+                "Expected {} input signals, got {}",
+                self.depth,
+                _inputs.len()
+            )
         }
 
         if self.depth == 2 {
@@ -87,10 +90,20 @@ impl Decoder {
         }
 
         let _not_result = self.not.evaluate(_inputs[0]);
-        let _lower_result = self.lower_half_decoder.as_mut().unwrap().evaluate(Bits::from_slice_b(&_inputs[1.._inputs.len()], None), _not_result);
-        let _upper_result = self.upper_half_decoder.as_mut().unwrap().evaluate(Bits::from_slice_b(&_inputs[1.._inputs.len()], None), _inputs[0]);
+        let _lower_result = self.lower_half_decoder.as_mut().unwrap().evaluate(
+            Bits::from_slice_b(&_inputs[1.._inputs.len()], None),
+            _not_result,
+        );
+        let _upper_result = self.upper_half_decoder.as_mut().unwrap().evaluate(
+            Bits::from_slice_b(&_inputs[1.._inputs.len()], None),
+            _inputs[0],
+        );
         let combined_upper_lower = [_upper_result, _lower_result].concat();
-        return combined_upper_lower.iter().enumerate().map(|(i, bit)| self.ands.as_mut().unwrap()[i].evaluate(*bit, _enable)).collect::<Vec<bool>>();
+        return combined_upper_lower
+            .iter()
+            .enumerate()
+            .map(|(i, bit)| self.ands.as_mut().unwrap()[i].evaluate(*bit, _enable))
+            .collect::<Vec<bool>>();
     }
 }
 
@@ -129,7 +142,7 @@ mod tests {
                         assert!(!bit)
                     }
                 }
-            bit_true_index += 1;
+                bit_true_index += 1;
             }
         }
     }
@@ -142,7 +155,8 @@ mod tests {
             for a2 in [false, true] {
                 for a1 in [false, true] {
                     for a0 in [false, true] {
-                        let result = decoder.evaluate(Bits::from_slice_b(&[a3, a2, a1, a0], Some(4)), false);
+                        let result =
+                            decoder.evaluate(Bits::from_slice_b(&[a3, a2, a1, a0], Some(4)), false);
 
                         for bit in result {
                             assert!(!bit)
@@ -162,7 +176,8 @@ mod tests {
             for a2 in [false, true] {
                 for a1 in [false, true] {
                     for a0 in [false, true] {
-                        let result = decoder.evaluate(Bits::from_slice_b(&[a3, a2, a1, a0], Some(4)), true);
+                        let result =
+                            decoder.evaluate(Bits::from_slice_b(&[a3, a2, a1, a0], Some(4)), true);
 
                         for (bit_index, bit) in result.iter().rev().enumerate() {
                             if bit_index == bit_true_index {
@@ -171,7 +186,7 @@ mod tests {
                                 assert!(!bit)
                             }
                         }
-                    bit_true_index += 1;
+                        bit_true_index += 1;
                     }
                 }
             }

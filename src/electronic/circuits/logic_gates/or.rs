@@ -3,14 +3,14 @@ use crate::electronic::circuits::logic_gates::not::Not;
 
 pub struct Or {
     nor: Nor,
-    not: Not
+    not: Not,
 }
 
 impl Or {
     pub fn new() -> Self {
         Or {
             nor: Nor::new(),
-            not: Not::new()
+            not: Not::new(),
         }
     }
 

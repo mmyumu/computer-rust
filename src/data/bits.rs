@@ -3,7 +3,7 @@ use std::slice::Iter;
 // TODO: see extern crate bitvector for better optimization
 pub struct Bits {
     size: u8,
-    data: Vec<bool>
+    data: Vec<bool>,
 }
 
 impl Bits {
@@ -21,8 +21,8 @@ impl Bits {
         let padding = size as usize - bools.len().min(size as usize);
 
         let data = std::iter::repeat(false)
-            .take(padding) 
-            .chain(bools.iter().cloned().take(size as usize - padding)) 
+            .take(padding)
+            .chain(bools.iter().cloned().take(size as usize - padding))
             .collect::<Vec<bool>>();
         Bits::from_vector_b(data, Some(size))
     }
@@ -45,14 +45,17 @@ impl Bits {
         };
 
         if value >= u32::pow(2, real_size.into()) {
-            panic!("The given value is bigger than the value that can be represented with {} bits", real_size);
+            panic!(
+                "The given value is bigger than the value that can be represented with {} bits",
+                real_size
+            );
         }
 
-        let data = (0..real_size).rev().map (|n| ((value >> n) & 1) != 0);
+        let data = (0..real_size).rev().map(|n| ((value >> n) & 1) != 0);
 
         Bits {
             size: real_size,
-            data: data.collect()
+            data: data.collect(),
         }
     }
 
@@ -64,7 +67,7 @@ impl Bits {
             .map(|(place, bit)| u32::from(*bit) << place)
             .sum()
     }
-    
+
     // pub fn reverse(&mut self) {
     //     self._data.reverse();
     // }

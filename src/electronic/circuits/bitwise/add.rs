@@ -1,14 +1,14 @@
 use std::iter::zip;
 
 use crate::data::bits::Bits;
-use crate::electronic::circuits::bitwise::Bitwise;
 use crate::electronic::circuits::adder::FullAdder;
+use crate::electronic::circuits::bitwise::Bitwise;
 
 use super::BitwiseCheck;
 
 pub struct BitwiseAdd {
     bitwise: Bitwise,
-    adders: Vec<FullAdder>
+    adders: Vec<FullAdder>,
 }
 
 impl BitwiseCheck for BitwiseAdd {
@@ -19,10 +19,12 @@ impl BitwiseCheck for BitwiseAdd {
 
 impl BitwiseAdd {
     pub fn new(size: u8) -> Self {
-        let adders = (0..size).map(|_| FullAdder::new()).collect::<Vec<FullAdder>>();
+        let adders = (0..size)
+            .map(|_| FullAdder::new())
+            .collect::<Vec<FullAdder>>();
         BitwiseAdd {
             bitwise: Bitwise::new(size),
-            adders
+            adders,
         }
     }
 
@@ -32,8 +34,11 @@ impl BitwiseAdd {
 
         let mut carry_in = carry;
         let mut output = Vec::<bool>::new();
-        let mut carry_out= false;
-        for (adder, (bit1, bit2)) in zip(self.adders.iter_mut(), zip(d1.iter().rev(), d2.iter().rev())) {
+        let mut carry_out = false;
+        for (adder, (bit1, bit2)) in zip(
+            self.adders.iter_mut(),
+            zip(d1.iter().rev(), d2.iter().rev()),
+        ) {
             let adder_result = adder.evaluate(*bit1, *bit2, carry_in);
             carry_in = adder_result.carry_out;
             output.push(adder_result.sum);
@@ -57,7 +62,7 @@ mod tests {
                     let mut bitwise_add = BitwiseAdd::new(4);
                     let data1 = Bits::from_int(d1, Some(4));
                     let data2 = Bits::from_int(d2, Some(4));
-    
+
                     let (result, carry_out) = bitwise_add.evaluate(&data1, &data2, carry);
 
                     assert_eq!(result.to_int(), d1 + d2 + (carry as u32));

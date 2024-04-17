@@ -1,12 +1,12 @@
-use crate::electronic::circuits::logic_gates::not::Not;
 use crate::electronic::circuits::logic_gates::and::And;
+use crate::electronic::circuits::logic_gates::not::Not;
 use crate::electronic::circuits::logic_gates::or::Or;
 
 pub struct Mux2To1 {
     not: Not,
     and0: And,
     and1: And,
-    or: Or
+    or: Or,
 }
 
 impl Mux2To1 {
@@ -15,7 +15,7 @@ impl Mux2To1 {
             not: Not::new(),
             and0: And::new(),
             and1: And::new(),
-            or: Or::new()
+            or: Or::new(),
         }
     }
 

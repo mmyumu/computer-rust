@@ -4,7 +4,7 @@ use crate::electronic::circuits::mux::Mux2To1;
 pub struct BarrelShifter {
     size: u8,
     right: bool,
-    muxes: Vec<Vec<Mux2To1>>
+    muxes: Vec<Vec<Mux2To1>>,
 }
 
 impl BarrelShifter {
@@ -14,16 +14,11 @@ impl BarrelShifter {
             let mut row_muxes = Vec::<Mux2To1>::new();
             for _ in 0..2_u8.pow(size as u32) {
                 row_muxes.push(Mux2To1::new());
-                
             }
             muxes.push(row_muxes);
         }
 
-        BarrelShifter {
-            size,
-            right,
-            muxes
-        }
+        BarrelShifter { size, right, muxes }
     }
 
     pub fn evaluate(&mut self, i: &Bits, s: &Bits) -> (Bits, bool) {
@@ -88,12 +83,19 @@ mod tests {
                 let s = Bits::from_int(index_s, Some(3));
 
                 let (result_right, _) = barrel_shiter_right.evaluate(&i, &s);
-                assert!(((i.to_int() >> s.to_int()) | (i.to_int() << (8 - s.to_int())) & 0xFF) % (2u32.pow(8)) == result_right.to_int());
+                assert!(
+                    ((i.to_int() >> s.to_int()) | (i.to_int() << (8 - s.to_int())) & 0xFF)
+                        % (2u32.pow(8))
+                        == result_right.to_int()
+                );
 
                 let (result_left, _) = barrel_shiter_left.evaluate(&i, &s);
-                assert!(((i.to_int() << s.to_int()) | (i.to_int() >> (8 - s.to_int())) & 0xFF) % (2u32.pow(8)) == result_left.to_int());
+                assert!(
+                    ((i.to_int() << s.to_int()) | (i.to_int() >> (8 - s.to_int())) & 0xFF)
+                        % (2u32.pow(8))
+                        == result_left.to_int()
+                );
             }
-
         }
     }
 

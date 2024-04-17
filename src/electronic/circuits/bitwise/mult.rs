@@ -1,17 +1,16 @@
-
 use std::iter::zip;
 
 use crate::data::bits::Bits;
-use crate::electronic::circuits::logic_gates::and::And;
-use crate::electronic::circuits::bitwise::Bitwise;
 use crate::electronic::circuits::bitwise::add::BitwiseAdd;
+use crate::electronic::circuits::bitwise::Bitwise;
+use crate::electronic::circuits::logic_gates::and::And;
 
 use super::BitwiseCheck;
 
 pub struct BitwiseMult {
     bitwise: Bitwise,
     ands: Vec<Vec<And>>,
-    bitwise_adds: Vec<BitwiseAdd>
+    bitwise_adds: Vec<BitwiseAdd>,
 }
 
 impl BitwiseCheck for BitwiseMult {
@@ -31,11 +30,13 @@ impl BitwiseMult {
             ands.push(ands_row);
         }
 
-        let bitwise_adds = (0..size-1).map(|_| BitwiseAdd::new(size * 2)).collect::<Vec<BitwiseAdd>>();
+        let bitwise_adds = (0..size - 1)
+            .map(|_| BitwiseAdd::new(size * 2))
+            .collect::<Vec<BitwiseAdd>>();
         BitwiseMult {
             bitwise: Bitwise::new(size),
             ands,
-            bitwise_adds
+            bitwise_adds,
         }
     }
 
@@ -51,14 +52,18 @@ impl BitwiseMult {
                 let and_bit = and.evaluate(*bit1, *bit2);
                 and_result.push(and_bit);
             }
-            
+
             and_result.resize(d1.len() + d2.len(), false);
 
             if output.len() == 0 {
                 output = Bits::from_vector_b(and_result, None);
             } else {
-                let (aggregated_result, _) = self.bitwise_adds[i - 1].evaluate(&Bits::from_vector_b(and_result, None), &output, false);
-                output = aggregated_result;                
+                let (aggregated_result, _) = self.bitwise_adds[i - 1].evaluate(
+                    &Bits::from_vector_b(and_result, None),
+                    &output,
+                    false,
+                );
+                output = aggregated_result;
             }
         }
 

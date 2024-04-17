@@ -1,20 +1,20 @@
-use crate::electronic::components::transistor::{Transistor, NMOSTransistor, PMOSTransistor};
+use crate::electronic::components::transistor::{NMOSTransistor, PMOSTransistor, Transistor};
 use crate::electronic::components::voltage_levels::{GND, VDD};
 
 pub struct Nand {
     nmos_a: NMOSTransistor,
     nmos_b: NMOSTransistor,
     pmos_a: PMOSTransistor,
-    pmos_b: PMOSTransistor
+    pmos_b: PMOSTransistor,
 }
 
 impl Nand {
     pub fn new() -> Self {
-        Nand{
+        Nand {
             nmos_a: NMOSTransistor::new(),
             nmos_b: NMOSTransistor::new(),
             pmos_a: PMOSTransistor::new(),
-            pmos_b: PMOSTransistor::new()
+            pmos_b: PMOSTransistor::new(),
         }
     }
 

@@ -24,7 +24,6 @@ impl TransistorState {
     }
 }
 
-
 pub struct NMOSTransistor {
     state: TransistorState,
 }
@@ -77,7 +76,6 @@ impl Transistor for PMOSTransistor {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -88,7 +86,7 @@ mod tests {
         assert!(!nmos.is_conducting());
         assert!(nmos.is_conducting() == nmos.drain());
     }
-    
+
     #[test]
     fn pmos_conducting_with_no_source() {
         let pmos = PMOSTransistor::new();
@@ -212,4 +210,3 @@ mod tests {
         assert!(!pmos.is_conducting());
     }
 }
- 

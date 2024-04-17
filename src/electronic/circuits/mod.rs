@@ -1,10 +1,10 @@
-pub mod logic_gates;
 pub mod adder;
-pub mod subtractor;
-pub mod mux;
-pub mod demux;
+pub mod bitwise;
 pub mod decoder;
+pub mod demux;
 pub mod flip_flop;
+pub mod logic_gates;
+pub mod mux;
 pub mod register;
 pub mod shifter;
-pub mod bitwise;
+pub mod subtractor;
